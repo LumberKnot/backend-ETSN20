@@ -23,3 +23,5 @@ To run the coverage, and create a report at the same time, you can use the follo
 ```bash
 npm run test:report --pattern=<file_pattern>
 ```
+
+The report is created in the `coverage` which contains an `index.html` file that can be opened. This page provides a detailed coverage report for each tested file.
