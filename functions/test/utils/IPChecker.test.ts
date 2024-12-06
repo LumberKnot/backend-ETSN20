@@ -4,13 +4,14 @@ import { expect } from 'chai';
 import {anything, spy, when} from 'ts-mockito';
 import {Netmask} from 'netmask';
 
-describe('IPChecker init', () => {
-    it('init wildcard', async () => {
-        const
-            netmasks = ['*'],
-            spiedSecretManager = spy(secretManager);
+function mockSecretManager(netmasks: String[]) {
+    const spiedSecretManager = spy(secretManager);
+    when(spiedSecretManager.getConfig(anything())).thenResolve(netmasks);
+}
 
-        when(spiedSecretManager.getConfig(anything())).thenResolve(netmasks);
+describe('IPChecker init', () => {
+    it('should init wildcard', async () => {
+        mockSecretManager(['*'])
 
         const ipchecker = new IPChecker('test');
         await ipchecker.init();
@@ -18,12 +19,9 @@ describe('IPChecker init', () => {
         expect(ipchecker['allowAll']).to.be.true;
     });
 
-    it('init netmasks', async () => {
-        const
-            netmasks = ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'],
-            spiedSecretManager = spy(secretManager);
-
-        when(spiedSecretManager.getConfig(anything())).thenResolve(netmasks);
+    it('should init netmasks', async () => {
+        const netmasks = ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'];
+        mockSecretManager(netmasks);
 
         const ipchecker = new IPChecker('test');
         await ipchecker.init();
@@ -36,34 +34,30 @@ describe('IPChecker allow wildcard', () => {
     const ipchecker = new IPChecker('test');
 
     before(() => {
-        const
-            netmasks = ['*'],
-            spiedSecretManager = spy(secretManager);
-
-        when(spiedSecretManager.getConfig(anything())).thenResolve(netmasks);
+        mockSecretManager(['*']);
     });
     
-    it('allow any', async () => {
+    it('should allow any', async () => {
         expect(await ipchecker.allow('1.2.3.4')).to.be.true;
     });
 });
 
 describe('IPChecker allow netmasks', () => {
-    const ipchecker = new IPChecker('test');
+    let ipchecker: IPChecker;
 
     before(() => {
-        const
-            netmasks = ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'],
-            spiedSecretManager = spy(secretManager);
-
-        when(spiedSecretManager.getConfig(anything())).thenResolve(netmasks);
+        mockSecretManager(['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']);
     });
 
-    it('allow in valid subnet', async () => {
+    beforeEach(() => {
+        ipchecker = new IPChecker('test');
+    });
+
+    it('should allow in valid subnet', async () => {
         expect(await ipchecker.allow('192.168.0.1')).to.be.true;
     });
 
-    it('don\'t allow outside valid subnet', async () => {
+    it('should not allow outside valid subnet', async () => {
         expect(await ipchecker.allow('8.8.8.8')).to.be.false;
-    })
-})
+    });
+});
