@@ -2,7 +2,9 @@
   "name": "functions",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
-    "test": "mocha --recursive --require ts-node/register 'test/**/*.ts'",
+    "test": "mocha --recursive --require ts-node/register $npm_config_pattern",
+    "test:coverage": "nyc npm run test",
+    "test:report": "npm run test:coverage && nyc report --reporter=html",
     "build": "tsc",
     "serve": "npm run build && firebase functions:config:get > .runtimeconfig.json --project protego-fb-dev && firebase emulators:start --only functions --project protego-fb-dev",
     "shell": "npm run build && firebase functions:config:get > .runtimeconfig.json --project protego-fb-dev && firebase functions:shell --project protego-fb-dev",
@@ -37,6 +39,7 @@
     "moment": "^2.29.1",
     "netmask": "^2.0.1",
     "node-forge": "0.10.0",
+    "nyc": "^17.1.0",
     "ssh2": "^1.5.0",
     "ssh2-streams": "^0.4.10",
     "superagent": "^6.1.0",
