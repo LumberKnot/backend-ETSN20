@@ -21,5 +21,5 @@ For example, replace `<file_pattern>` with `test/**/*.ts` to check coverage from
 To run the coverage, and create a report at the same time, you can use the following command:
 
 ```bash
-npm run test:coverage:report --pattern=<file_pattern>
+npm run test:report --pattern=<file_pattern>
 ```
