@@ -16,11 +16,6 @@
   "engines": {
     "node": "12"
   },
-  "nyc": {
-    "include": [
-      "src/**/*.ts"
-    ]
-  },
   "main": "lib/src/index.js",
   "dependencies": {
     "@google-cloud/logging-bunyan": "^3.0.1",
