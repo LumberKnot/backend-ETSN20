@@ -1,0 +1,10 @@
+{
+	"instrument": true,
+	"cache": false,
+	"all": true,
+	"include": [
+		"src"
+	],
+	"extension": [".ts"],
+	"parser-plugins": ["typescript"]
+}
